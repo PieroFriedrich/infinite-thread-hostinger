@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --myblue: #003049;
+  --mybeige: #eae2b7;
+  --myred: #d62828;
+  --myorange: #ff6700;
+  --myyellow: #fcbf49;
+}
