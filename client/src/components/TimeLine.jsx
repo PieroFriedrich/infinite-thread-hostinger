@@ -6,6 +6,7 @@ function TimeLine() {
       <Post />
       <Post />
       <Post />
+      <Post />
     </main>
   );
 }
