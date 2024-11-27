@@ -10,7 +10,7 @@ function Home() {
       <NavBar />
       <div className="flex w-full">
         <div className="w-[30%]">
-          <Tags />
+          <Tags wid={80} />
         </div>
         <div className="w-[40%]">
           <TimeLine />
