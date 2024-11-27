@@ -40,6 +40,36 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
+// Route to create a new user
+app.post("/users", async (req, res) => {
+  const { email, fullName } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  try {
+    // Insert the user if not exists
+    const [result] = await pool.execute(
+      "INSERT IGNORE INTO users (email, full_name) VALUES (?, ?)",
+      [email, fullName]
+    );
+
+    if (result.affectedRows === 0) {
+      // User already exists
+      return res.status(200).json({ message: "User already exists" });
+    }
+
+    res.status(201).json({
+      message: "User created successfully",
+      userId: result.insertId,
+    });
+  } catch (error) {
+    console.error("User creation error:", error);
+    res.status(500).json({ error: "Failed to create user" });
+  }
+});
+
 // Fetch all tags
 app.get("/tags", async (req, res) => {
   try {
