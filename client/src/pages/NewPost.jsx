@@ -36,21 +36,33 @@ const NewPost = () => {
       return;
     }
 
-    console.log("Form Data Submitted:", formData);
+    const postData = {
+      title: formData.title,
+      details: formData.comment, // Rename to match server expectations
+      tags: formData.tags.split(",").map((tag) => tag.trim()), // Convert tags to an array
+    };
+
+    console.log("Form Data Submitted:", postData);
 
     fetch("http://localhost:3000/posts", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+        "x-username": user.email, // Pass the user's email as username
+      },
+      body: JSON.stringify(postData),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Post created:", data);
-        alert("Post created successfully!");
       })
       .catch((error) => {
         console.error("Error creating post:", error);
-        alert("Failed to create post.");
       });
   };
 

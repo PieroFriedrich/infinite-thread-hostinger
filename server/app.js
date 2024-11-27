@@ -18,27 +18,27 @@ app.use((req, res, next) => {
 });
 
 // Middleware to check if user is authenticated
-const authenticateUser = async (req, res, next) => {
-  const username = req.headers["x-username"];
+// const authenticateUser = async (req, res, next) => {
+//   const username = req.headers["x-username"];
 
-  if (!username) {
-    return res.status(401).json({ error: "Authentication required" });
-  }
+//   if (!username) {
+//     return res.status(401).json({ error: "Authentication required" });
+//   }
 
-  try {
-    // Check if user exists, create if not
-    const [users] = await pool.execute(
-      "INSERT IGNORE INTO users (username) VALUES (?)",
-      [username]
-    );
+//   try {
+//     // Check if user exists, create if not
+//     const [users] = await pool.execute(
+//       "INSERT IGNORE INTO users (username) VALUES (?)",
+//       [username]
+//     );
 
-    req.username = username;
-    next();
-  } catch (error) {
-    console.error("Authentication error:", error);
-    res.status(500).json({ error: "Authentication failed" });
-  }
-};
+//     req.username = username;
+//     next();
+//   } catch (error) {
+//     console.error("Authentication error:", error);
+//     res.status(500).json({ error: "Authentication failed" });
+//   }
+// };
 
 // Route to create a new user
 app.post("/users", async (req, res) => {
@@ -101,12 +101,17 @@ app.get("/posts", async (req, res) => {
 });
 
 // Route to create a new post
-app.post("/posts", authenticateUser, async (req, res) => {
-  const { title, details, tags } = req.body;
-  const username = req.username;
+// app.post("/posts", authenticateUser, async (req, res) => {
+app.post("/posts", async (req, res) => {
+  const { title, details, tags = [] } = req.body; // Default tags to an empty array
+  const username = req.headers["x-username"]; // Read username from headers
 
   if (!title || !details) {
     return res.status(400).json({ error: "Title and details are required" });
+  }
+
+  if (!username) {
+    return res.status(401).json({ error: "Authentication required" });
   }
 
   try {
@@ -118,12 +123,26 @@ app.post("/posts", authenticateUser, async (req, res) => {
 
     const postId = result.insertId;
 
-    // Insert tags into post_tags table (many-to-many relationship)
-    if (tags && tags.length > 0) {
-      const tagValues = tags.map((tagId) => [postId, tagId]);
-      await pool.query("INSERT INTO post_tags (post_id, tag_id) VALUES ?", [
-        tagValues,
-      ]);
+    // Insert tags into post_tags table if tags are provided
+    if (tags.length > 0) {
+      const tagIds = await Promise.all(
+        tags.map(async (tagName) => {
+          const [tagResult] = await pool.execute(
+            "SELECT id FROM tags WHERE name = ?",
+            [tagName]
+          );
+          console.log("tags = ", tags);
+          return tagResult[0]?.id;
+        })
+      );
+
+      const validTagIds = tagIds.filter(Boolean); // Remove nulls
+      const tagValues = validTagIds.map((tagId) => [postId, tagId]);
+      if (tagValues.length > 0) {
+        await pool.query("INSERT INTO post_tags (post_id, tag_id) VALUES ?", [
+          tagValues,
+        ]);
+      }
     }
 
     res.status(201).json({
