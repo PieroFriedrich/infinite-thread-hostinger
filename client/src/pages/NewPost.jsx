@@ -8,8 +8,10 @@ const NewPost = () => {
   const [formData, setFormData] = useState({
     title: "",
     comment: "",
-    tags: "",
   });
+
+  // State to store selected tag IDs
+  const [selectedTagIds, setSelectedTagIds] = useState([]);
 
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
@@ -36,21 +38,46 @@ const NewPost = () => {
       return;
     }
 
-    console.log("Form Data Submitted:", formData);
-
-    fetch("http://localhost:3000/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    })
+    // Fetch all tags to get tag names by their IDs
+    fetch("http://localhost:3000/tags")
       .then((response) => response.json())
+      .then((allTags) => {
+        // Convert tag IDs to tag names
+        const tagNames = selectedTagIds
+          .map((tagId) => allTags.find((tag) => tag.id === tagId)?.name)
+          .filter(Boolean);
+
+        const postData = {
+          title: formData.title,
+          details: formData.comment,
+          tags: tagNames,
+        };
+
+        console.log("Form Data Submitted:", postData);
+
+        return fetch("http://localhost:3000/posts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-username": user.email,
+          },
+          body: JSON.stringify(postData),
+        });
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Post created:", data);
-        alert("Post created successfully!");
+        // Optional: Reset form or show success message
+        setFormData({ title: "", comment: "" });
+        setSelectedTagIds([]); // Clear selected tags
       })
       .catch((error) => {
         console.error("Error creating post:", error);
-        alert("Failed to create post.");
       });
   };
 
@@ -106,7 +133,8 @@ const NewPost = () => {
               ></textarea>
             </div>
 
-            <Tags noSearch={true} />
+            {/* Pass the setSelectedTagIds as a prop */}
+            <Tags noSearch={true} onTagsChange={setSelectedTagIds} />
 
             <button
               type="submit"

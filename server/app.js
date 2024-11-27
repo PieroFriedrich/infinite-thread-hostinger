@@ -18,27 +18,27 @@ app.use((req, res, next) => {
 });
 
 // Middleware to check if user is authenticated
-const authenticateUser = async (req, res, next) => {
-  const username = req.headers["x-username"];
+// const authenticateUser = async (req, res, next) => {
+//   const username = req.headers["x-username"];
 
-  if (!username) {
-    return res.status(401).json({ error: "Authentication required" });
-  }
+//   if (!username) {
+//     return res.status(401).json({ error: "Authentication required" });
+//   }
 
-  try {
-    // Check if user exists, create if not
-    const [users] = await pool.execute(
-      "INSERT IGNORE INTO users (username) VALUES (?)",
-      [username]
-    );
+//   try {
+//     // Check if user exists, create if not
+//     const [users] = await pool.execute(
+//       "INSERT IGNORE INTO users (username) VALUES (?)",
+//       [username]
+//     );
 
-    req.username = username;
-    next();
-  } catch (error) {
-    console.error("Authentication error:", error);
-    res.status(500).json({ error: "Authentication failed" });
-  }
-};
+//     req.username = username;
+//     next();
+//   } catch (error) {
+//     console.error("Authentication error:", error);
+//     res.status(500).json({ error: "Authentication failed" });
+//   }
+// };
 
 // Route to create a new user
 app.post("/users", async (req, res) => {
@@ -101,38 +101,84 @@ app.get("/posts", async (req, res) => {
 });
 
 // Route to create a new post
-app.post("/posts", authenticateUser, async (req, res) => {
-  const { title, details, tags } = req.body;
-  const username = req.username;
+// app.post("/posts", authenticateUser, async (req, res) => {
+app.post("/posts", async (req, res) => {
+  const { title, details, tags = [] } = req.body;
+  const username = req.headers["x-username"];
 
   if (!title || !details) {
     return res.status(400).json({ error: "Title and details are required" });
   }
 
+  if (!username) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+
+  const connection = await pool.getConnection();
+
   try {
+    // Start a transaction to ensure data consistency
+    await connection.beginTransaction();
+
     // Insert the post
-    const [result] = await pool.execute(
+    const [postResult] = await connection.execute(
       "INSERT INTO posts (title, author, details, created_at) VALUES (?, ?, ?, NOW())",
       [title, username, details]
     );
 
-    const postId = result.insertId;
+    const postId = postResult.insertId;
 
-    // Insert tags into post_tags table (many-to-many relationship)
+    // If tags are provided, process them
     if (tags && tags.length > 0) {
-      const tagValues = tags.map((tagId) => [postId, tagId]);
-      await pool.query("INSERT INTO post_tags (post_id, tag_id) VALUES ?", [
-        tagValues,
-      ]);
+      // Find existing tag IDs, create new tags if they don't exist
+      const tagPromises = tags.map(async (tagName) => {
+        // First, try to find the existing tag
+        const [existingTag] = await connection.execute(
+          "SELECT id FROM tags WHERE name = ?",
+          [tagName]
+        );
+
+        if (existingTag.length > 0) {
+          return existingTag[0].id;
+        } else {
+          // If tag doesn't exist, insert it
+          const [newTagResult] = await connection.execute(
+            "INSERT INTO tags (name) VALUES (?)",
+            [tagName]
+          );
+          return newTagResult.insertId;
+        }
+      });
+
+      // Resolve all tag promises
+      const tagIds = await Promise.all(tagPromises);
+
+      // Insert associations into post_tags
+      if (tagIds.length > 0) {
+        const tagAssociations = tagIds.map((tagId) => [postId, tagId]);
+        await connection.query(
+          "INSERT INTO post_tags (post_id, tag_id) VALUES ?",
+          [tagAssociations]
+        );
+      }
     }
+
+    // Commit the transaction
+    await connection.commit();
 
     res.status(201).json({
       message: "Post created successfully",
-      postId: result.insertId,
+      postId: postId,
+      tags: tags,
     });
   } catch (error) {
+    // Rollback the transaction in case of error
+    await connection.rollback();
     console.error("Post creation error:", error);
     res.status(500).json({ error: "Failed to create post" });
+  } finally {
+    // Release the connection back to the pool
+    connection.release();
   }
 });
 
