@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchIcon from "../images/magnifying_glass.png";
 
-const Tags = (props) => {
+const Tags = ({ noSearch, onTagsChange, wid }) => {
   const [tags, setTags] = useState([]);
   const [activeTags, setActiveTags] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +25,13 @@ const Tags = (props) => {
     fetchTags();
   }, []);
 
+  // Update the parent component whenever activeTags changes
+  useEffect(() => {
+    if (onTagsChange) {
+      onTagsChange(activeTags);
+    }
+  }, [activeTags, onTagsChange]);
+
   const toggleTag = (tagId) => {
     setActiveTags((prevActiveTags) => {
       if (prevActiveTags.includes(tagId)) {
@@ -46,10 +53,10 @@ const Tags = (props) => {
   return (
     <div
       className={`flex flex-col items-center mx-auto ${
-        props.wid ? `w-[${props.wid}%]` : "w-[100%]"
+        wid ? `w-[${wid}%]` : "w-[100%]"
       } mt-4 gap-1`}
     >
-      {!props.noSearch ? (
+      {!noSearch ? (
         <h2>Check Posts by Tag</h2>
       ) : (
         <h2>What is your post about?</h2>
@@ -71,7 +78,7 @@ const Tags = (props) => {
         ))}
       </div>
       {warning && <p className="text-red-500 text-sm mt-2">{warning}</p>}
-      {!props.noSearch && (
+      {!noSearch && (
         <button className="w-full mt-1">
           <div className="flex gap-1 bg-myorange p-1 rounded-md text-myblue justify-center">
             <img src={SearchIcon} alt="search icon" width={20} height={20} />

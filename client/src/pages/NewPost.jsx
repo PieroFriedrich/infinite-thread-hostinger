@@ -8,8 +8,10 @@ const NewPost = () => {
   const [formData, setFormData] = useState({
     title: "",
     comment: "",
-    tags: "",
   });
+
+  // State to store selected tag IDs
+  const [selectedTagIds, setSelectedTagIds] = useState([]);
 
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
@@ -36,22 +38,32 @@ const NewPost = () => {
       return;
     }
 
-    const postData = {
-      title: formData.title,
-      details: formData.comment, // Rename to match server expectations
-      tags: formData.tags.split(",").map((tag) => tag.trim()), // Convert tags to an array
-    };
+    // Fetch all tags to get tag names by their IDs
+    fetch("http://localhost:3000/tags")
+      .then((response) => response.json())
+      .then((allTags) => {
+        // Convert tag IDs to tag names
+        const tagNames = selectedTagIds
+          .map((tagId) => allTags.find((tag) => tag.id === tagId)?.name)
+          .filter(Boolean);
 
-    console.log("Form Data Submitted:", postData);
+        const postData = {
+          title: formData.title,
+          details: formData.comment,
+          tags: tagNames,
+        };
 
-    fetch("http://localhost:3000/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-username": user.email, // Pass the user's email as username
-      },
-      body: JSON.stringify(postData),
-    })
+        console.log("Form Data Submitted:", postData);
+
+        return fetch("http://localhost:3000/posts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-username": user.email,
+          },
+          body: JSON.stringify(postData),
+        });
+      })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -60,6 +72,9 @@ const NewPost = () => {
       })
       .then((data) => {
         console.log("Post created:", data);
+        // Optional: Reset form or show success message
+        setFormData({ title: "", comment: "" });
+        setSelectedTagIds([]); // Clear selected tags
       })
       .catch((error) => {
         console.error("Error creating post:", error);
@@ -118,7 +133,8 @@ const NewPost = () => {
               ></textarea>
             </div>
 
-            <Tags noSearch={true} />
+            {/* Pass the setSelectedTagIds as a prop */}
+            <Tags noSearch={true} onTagsChange={setSelectedTagIds} />
 
             <button
               type="submit"
