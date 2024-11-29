@@ -5,12 +5,13 @@ import AboutUs from "../components/AboutUs";
 import GoogleButton from "../components/GoogleButton";
 
 const NewPost = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: "",
     comment: "",
   });
 
-  // State to store selected tag IDs
   const [selectedTagIds, setSelectedTagIds] = useState([]);
 
   const [user, setUser] = useState(() => {
@@ -38,11 +39,9 @@ const NewPost = () => {
       return;
     }
 
-    // Fetch all tags to get tag names by their IDs
     fetch("http://localhost:3000/tags")
       .then((response) => response.json())
       .then((allTags) => {
-        // Convert tag IDs to tag names
         const tagNames = selectedTagIds
           .map((tagId) => allTags.find((tag) => tag.id === tagId)?.name)
           .filter(Boolean);
@@ -72,9 +71,9 @@ const NewPost = () => {
       })
       .then((data) => {
         console.log("Post created:", data);
-        // Optional: Reset form or show success message
+        navigate("/");
         setFormData({ title: "", comment: "" });
-        setSelectedTagIds([]); // Clear selected tags
+        setSelectedTagIds([]);
       })
       .catch((error) => {
         console.error("Error creating post:", error);
