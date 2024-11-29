@@ -142,6 +142,32 @@ app.post("/posts", async (req, res) => {
   }
 });
 
+app.get("/posts/tag/:tagId", async (req, res) => {
+  const { tagId } = req.params;
+
+  try {
+    const [posts] = await pool.execute(
+      `
+      SELECT p.id, p.title, u.full_name AS author, p.details, p.created_at, 
+             GROUP_CONCAT(t.name) AS tags
+      FROM posts p
+      LEFT JOIN users u ON p.author = u.email
+      LEFT JOIN post_tags pt ON p.id = pt.post_id
+      LEFT JOIN tags t ON pt.tag_id = t.id
+      WHERE pt.tag_id = ?
+      GROUP BY p.id
+      ORDER BY p.created_at DESC
+    `,
+      [tagId]
+    );
+
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error("Fetching posts by tag error:", error);
+    res.status(500).json({ error: "Failed to fetch posts by tag" });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

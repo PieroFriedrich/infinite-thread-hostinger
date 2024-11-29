@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchIcon from "../images/magnifying_glass.png";
 
-const Tags = ({ noSearch, onTagsChange, wid }) => {
+const Tags = ({ noSearch, onTagsChange, wid, onSearchClick }) => {
   const [tags, setTags] = useState([]);
   const [activeTags, setActiveTags] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,6 @@ const Tags = ({ noSearch, onTagsChange, wid }) => {
     fetchTags();
   }, []);
 
-  // Update the parent component whenever activeTags changes
   useEffect(() => {
     if (onTagsChange) {
       onTagsChange(activeTags);
@@ -45,6 +44,12 @@ const Tags = ({ noSearch, onTagsChange, wid }) => {
         return prevActiveTags;
       }
     });
+  };
+
+  const handleSearch = () => {
+    if (onSearchClick) {
+      onSearchClick(activeTags);
+    }
   };
 
   if (loading) return <div>Loading tags...</div>;
@@ -79,7 +84,7 @@ const Tags = ({ noSearch, onTagsChange, wid }) => {
       </div>
       {warning && <p className="text-red-500 text-sm mt-2">{warning}</p>}
       {!noSearch && (
-        <button className="w-full mt-1">
+        <button className="w-full mt-1" onClick={handleSearch}>
           <div className="flex gap-1 bg-myorange p-1 rounded-md text-myblue justify-center">
             <img src={SearchIcon} alt="search icon" width={20} height={20} />
             Search
