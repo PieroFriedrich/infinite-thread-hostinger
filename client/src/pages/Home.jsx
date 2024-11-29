@@ -84,7 +84,7 @@ function Home() {
             onSearchClick={handleSearchClick}
           />
         </div>
-        <div className="w-[40%]">
+        <div className="w-[40%] max-h-[100vh] overflow-y-auto border border-gray-200 p-4 rounded">
           {posts.length === 0 ? (
             <p>No posts found.</p>
           ) : (
