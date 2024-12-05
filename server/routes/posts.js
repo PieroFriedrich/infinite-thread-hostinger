@@ -98,22 +98,50 @@ router.post("/", async (req, res) => {
 // Get posts by tag
 router.get("/tag/:tagId", async (req, res) => {
   const { tagId } = req.params;
+  const { additionalTagIds } = req.query;
 
   try {
-    const [posts] = await pool.execute(
-      `
+    let query = `
       SELECT p.id, p.title, u.full_name AS author, p.details, p.created_at, 
-             GROUP_CONCAT(t.name) AS tags
+             GROUP_CONCAT(DISTINCT t.name) AS tags
       FROM posts p
       LEFT JOIN users u ON p.author = u.email
       LEFT JOIN post_tags pt ON p.id = pt.post_id
       LEFT JOIN tags t ON pt.tag_id = t.id
-      WHERE pt.tag_id = ?
-      GROUP BY p.id
+      WHERE 1=1
+    `;
+
+    const queryParams = [];
+
+    // Always include the primary tag
+    query += ` AND p.id IN (
+      SELECT post_id 
+      FROM post_tags 
+      WHERE tag_id = ?
+    )`;
+    queryParams.push(tagId);
+
+    // If additional tags are provided, add them to the filtering
+    if (additionalTagIds) {
+      const additionalTagArray = additionalTagIds
+        .split(",")
+        .map((id) => parseInt(id.trim()));
+      query += ` AND p.id IN (
+        SELECT post_id 
+        FROM post_tags 
+        WHERE tag_id IN (?)
+        GROUP BY post_id
+        HAVING COUNT(DISTINCT tag_id) = ?
+      )`;
+      queryParams.push(additionalTagArray, additionalTagArray.length + 1);
+    }
+
+    query += `
+      GROUP BY p.id, p.title, u.full_name, p.details, p.created_at
       ORDER BY p.created_at DESC
-    `,
-      [tagId]
-    );
+    `;
+
+    const [posts] = await pool.execute(query, queryParams);
 
     res.status(200).json(posts);
   } catch (error) {
