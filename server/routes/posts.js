@@ -95,6 +95,34 @@ router.post("/", async (req, res) => {
   }
 });
 
+// Get a single post by ID
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [post] = await pool.execute(
+      `SELECT p.id, p.title, u.full_name AS author, p.details, p.created_at, 
+              GROUP_CONCAT(t.name) AS tags
+       FROM posts p
+       LEFT JOIN users u ON p.author = u.email
+       LEFT JOIN post_tags pt ON p.id = pt.post_id
+       LEFT JOIN tags t ON pt.tag_id = t.id
+       WHERE p.id = ?
+       GROUP BY p.id`,
+      [id]
+    );
+
+    if (post.length === 0) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json(post[0]); // Send back the first post (since the query only returns one)
+  } catch (error) {
+    console.error("Fetching post error:", error);
+    res.status(500).json({ error: "Failed to fetch post" });
+  }
+});
+
 // Get posts by tag
 router.get("/tag/:tagId", async (req, res) => {
   const { tagId } = req.params;
