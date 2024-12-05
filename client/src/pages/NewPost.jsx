@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Tags from "../components/Tags";
 import AboutUs from "../components/AboutUs";
 import GoogleButton from "../components/GoogleButton";
+import { useNavigate } from "react-router-dom";
 
 const NewPost = () => {
   const navigate = useNavigate();
