@@ -58,6 +58,18 @@ const initializeDatabase = async () => {
       )
     `);
 
+    // Create likes table
+    await pool.execute(`
+    CREATE TABLE IF NOT EXISTS likes (
+      id INT AUTO_INCREMENT PRIMARY KEY,  -- Add an auto-increment primary key
+      user_email VARCHAR(255) NOT NULL,
+      post_id INT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_email) REFERENCES users(email),
+      FOREIGN KEY (post_id) REFERENCES posts(id)
+      )
+    `);
+
     // Insert predefined tags
     const predefinedTags = [
       "JavaScript",

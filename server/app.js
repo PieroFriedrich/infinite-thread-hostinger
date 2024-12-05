@@ -5,6 +5,7 @@ const { initializeDatabase } = require("./db/sql");
 const userRoutes = require("./routes/users");
 const postRoutes = require("./routes/posts");
 const tagRoutes = require("./routes/tags");
+const likeRoutes = require("./routes/likes");
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/tags", tagRoutes);
+app.use("/likes", likeRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
