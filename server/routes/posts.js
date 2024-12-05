@@ -178,4 +178,76 @@ router.get("/tag/:tagId", async (req, res) => {
   }
 });
 
+// Get comments for a specific post
+router.get("/:postId/comments", async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    const [comments] = await pool.execute(
+      "SELECT c.id, c.text, c.created_at, u.full_name AS author FROM comments c " +
+        "LEFT JOIN users u ON c.author = u.email WHERE c.post_id = ? ORDER BY c.created_at DESC",
+      [postId]
+    );
+
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ error: "Failed to fetch comments" });
+  }
+});
+
+// Add a comment to a post
+router.post("/:postId/comments", async (req, res) => {
+  const { postId } = req.params;
+  const { author, text } = req.body;
+
+  try {
+    // Validate the author exists in the users table
+    const [userResult] = await pool.execute(
+      "SELECT email FROM users WHERE email = ?",
+      [author]
+    );
+    if (userResult.length === 0) {
+      return res.status(400).json({ error: "Author does not exist" });
+    }
+
+    // Validate the post exists in the posts table
+    const [postResult] = await pool.execute(
+      "SELECT id FROM posts WHERE id = ?",
+      [postId]
+    );
+    if (postResult.length === 0) {
+      return res.status(400).json({ error: "Post does not exist" });
+    }
+
+    // Insert the comment
+    await pool.execute(
+      "INSERT INTO comments (post_id, author, text, created_at) VALUES (?, ?, ?, NOW())",
+      [postId, author, text]
+    );
+
+    res.status(201).json({ message: "Comment added successfully" });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Route: GET /posts/:postId/comments/count
+router.get("/:postId/comments/count", async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    const [result] = await pool.execute(
+      "SELECT COUNT(*) AS commentCount FROM comments WHERE post_id = ?",
+      [postId]
+    );
+
+    res.status(200).json({ commentCount: result[0].commentCount });
+  } catch (error) {
+    console.error("Error fetching comment count:", error);
+    res.status(500).json({ error: "Failed to fetch comment count" });
+  }
+});
+
 module.exports = router;

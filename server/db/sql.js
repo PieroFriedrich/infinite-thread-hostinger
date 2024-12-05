@@ -70,6 +70,19 @@ const initializeDatabase = async () => {
       )
     `);
 
+    // Add this to the existing initializeDatabase function
+    await pool.execute(`
+    CREATE TABLE IF NOT EXISTS ${database}.comments (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      post_id INT NOT NULL,
+      author VARCHAR(255) NOT NULL,
+      text TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (post_id) REFERENCES ${database}.posts(id),
+      FOREIGN KEY (author) REFERENCES ${database}.users(email)
+      )
+    `);
+
     // Insert predefined tags
     const predefinedTags = [
       "JavaScript",

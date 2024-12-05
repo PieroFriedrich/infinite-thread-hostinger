@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Logo from "../images/infinite_thread.png";
+import CommentIcon from "../images/comment_icon.svg";
 import LikeButton from "./LikeButton";
 import { Link } from "react-router-dom";
 
@@ -8,6 +9,7 @@ function Post({ post }) {
   const { id, title, author, details, tags } = post;
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [commentCount, setCommentCount] = useState(0); // Declare commentCount state
   const [userEmail, setUserEmail] = useState(null);
 
   // Fetch and parse user email from localStorage
@@ -25,13 +27,17 @@ function Post({ post }) {
     }
   }, []); // Only runs once on component mount
 
-  // Fetch initial like count and like status
+  // Fetch initial like count, like status, and comment count
   useEffect(() => {
-    const fetchLikeData = async () => {
+    const fetchPostData = async () => {
       try {
         // Fetch like count
         const countResponse = await axios.get(`/likes/count/${id}`);
         setLikeCount(countResponse.data.likeCount);
+
+        // Fetch comment count
+        const commentResponse = await axios.get(`/posts/${id}/comments/count`);
+        setCommentCount(commentResponse.data.commentCount); // Assuming the backend sends commentCount
 
         // Only check the like status if userEmail exists
         if (userEmail) {
@@ -43,14 +49,13 @@ function Post({ post }) {
         }
       } catch (error) {
         console.error(
-          "Error fetching like data:",
+          "Error fetching post data:",
           error.response ? error.response.data : error.message
         );
       }
     };
 
-    // Fetch only if userEmail is available
-    fetchLikeData();
+    fetchPostData();
   }, [id, userEmail]); // Dependency array includes userEmail to trigger re-fetch
 
   return (
@@ -65,7 +70,7 @@ function Post({ post }) {
             Group Category
           </div>
           <h2 className="text-white text-3xl py-3 border-b border-b-myorange">
-            <Link to={`/post/${id}`} className="text-white">
+            <Link to={`/post/${id}`} className="text-white hover:text-myorange">
               {title}
             </Link>
           </h2>
@@ -84,6 +89,12 @@ function Post({ post }) {
             }}
           />
           <span className="text-white">{likeCount}</span>
+          <div className="flex items-center gap-1">
+            <Link to={`/post/${id}`}>
+              <img src={CommentIcon} alt="Comments Icon" width={20} />
+            </Link>
+            <span className="text-white">{commentCount}</span>
+          </div>
         </div>
 
         <div className="flex mr-1 gap-1">
