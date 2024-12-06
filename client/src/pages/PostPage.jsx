@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../components/NavBar";
 import Post from "../components/Post";
 
 function PostPage() {
+  const navigate = useNavigate();
   const { id } = useParams(); // Get post ID from URL
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -38,10 +39,21 @@ function PostPage() {
   }, [id]);
 
   const handleCommentSubmit = async () => {
+    // Check if user is logged in before submitting comment
+    const storedUser = localStorage.getItem("user");
+
+    // If no user is logged in, redirect to login
+    if (!storedUser) {
+      navigate("/login", {
+        state: {
+          from: window.location.pathname,
+          message: "You need to log in to post a comment",
+        },
+      });
+      return;
+    }
+
     if (!newComment.trim()) return;
-    console.log("Author:", JSON.parse(localStorage.getItem("user")).email);
-    console.log("Post ID:", id);
-    console.log("Comment Text:", newComment);
 
     try {
       const response = await axios.post(
