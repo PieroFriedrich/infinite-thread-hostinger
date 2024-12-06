@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import axios from "axios";
 import HeartIcon from "../images/heart_icon.svg";
 import FilledHeartIcon from "../images/filled_heart_icon.svg";
 
 function LikeButton({ postId, isLiked, likeCount, onLikeChange }) {
+  const navigate = useNavigate();
   const handleLike = async () => {
     console.log("Like button clicked for post ID:", postId);
 
@@ -36,19 +38,7 @@ function LikeButton({ postId, isLiked, likeCount, onLikeChange }) {
     } catch (error) {
       console.error("Error toggling like:", error);
       console.error("Error response:", error.response);
-
-      if (error.response) {
-        switch (error.response.status) {
-          case 404:
-            alert("Post or user not found");
-            break;
-          case 409:
-            alert("You've already liked this post");
-            break;
-          default:
-            alert("An error occurred while toggling like");
-        }
-      }
+      navigate("/login");
     }
   };
 
