@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import Logo from "../images/infinite_thread.png";
 
 function GoogleButton() {
   const [user, setUser] = useState(() => {
@@ -84,6 +85,7 @@ function GoogleButton() {
             <img
               src={user.picture}
               alt="User Profile"
+              onError={(e) => (e.target.src = Logo)} // change to logo if picture fails
               style={{ width: "30px", height: "30px", borderRadius: "50%" }}
             />
           </div>
