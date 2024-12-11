@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const [posts] = await pool.execute(`
-      SELECT p.id, p.title, u.full_name AS author, p.details, p.created_at, 
+      SELECT p.id, p.title, p.image_url, u.full_name AS author, p.details, p.created_at, 
              GROUP_CONCAT(t.name) AS tags
       FROM posts p
       LEFT JOIN users u ON p.author = u.email
@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 
 // Create a new post
 router.post("/", async (req, res) => {
-  const { title, details, tags = [] } = req.body;
+  const { title, details, tags = [], imageUrl } = req.body;
   const username = req.headers["x-username"];
 
   if (!title || !details) {
@@ -42,9 +42,14 @@ router.post("/", async (req, res) => {
   try {
     await connection.beginTransaction();
 
+    // Include image_url in the post insertion if an imageUrl is provided
     const [postResult] = await connection.execute(
-      "INSERT INTO posts (title, author, details, created_at) VALUES (?, ?, ?, NOW())",
-      [title, username, details]
+      imageUrl
+        ? "INSERT INTO posts (title, author, details, image_url, created_at) VALUES (?, ?, ?, ?, NOW())"
+        : "INSERT INTO posts (title, author, details, created_at) VALUES (?, ?, ?, NOW())",
+      imageUrl
+        ? [title, username, details, imageUrl]
+        : [title, username, details]
     );
 
     const postId = postResult.insertId;
@@ -101,7 +106,7 @@ router.get("/:id", async (req, res) => {
 
   try {
     const [post] = await pool.execute(
-      `SELECT p.id, p.title, u.full_name AS author, p.details, p.created_at, 
+      `SELECT p.id, p.title, u.full_name AS author, p.details, p.image_url, p.created_at, 
               GROUP_CONCAT(t.name) AS tags
        FROM posts p
        LEFT JOIN users u ON p.author = u.email

@@ -6,40 +6,51 @@ import LikeButton from "./LikeButton";
 import { Link } from "react-router-dom";
 
 function Post({ post }) {
-  const { id, title, author, details, tags } = post;
+  const { id, title, author, image_url, details, tags } = post;
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
-  const [commentCount, setCommentCount] = useState(0); // Declare commentCount state
+  const [commentCount, setCommentCount] = useState(0);
   const [userEmail, setUserEmail] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
 
-  // Fetch and parse user email from localStorage
+  const fetchImage = async () => {
+    try {
+      const response = await fetch(image_url);
+      const blob = await response.blob();
+      const imageObjectUrl = URL.createObjectURL(blob);
+      setImageUrl(imageObjectUrl);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, [image_url]);
+
   useEffect(() => {
     try {
       const user = localStorage.getItem("user");
       if (user) {
         const parsedUser = JSON.parse(user);
-        setUserEmail(parsedUser.email); // Store the email
+        setUserEmail(parsedUser.email);
       } else {
         console.warn("No user found in localStorage");
       }
     } catch (error) {
       console.error("Error parsing user from localStorage:", error);
     }
-  }, []); // Only runs once on component mount
+  }, []);
 
-  // Fetch initial like count, like status, and comment count
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        // Fetch like count
         const countResponse = await axios.get(`/likes/count/${id}`);
         setLikeCount(countResponse.data.likeCount);
 
-        // Fetch comment count
         const commentResponse = await axios.get(`/posts/${id}/comments/count`);
-        setCommentCount(commentResponse.data.commentCount); // Assuming the backend sends commentCount
+        setCommentCount(commentResponse.data.commentCount);
 
-        // Only check the like status if userEmail exists
         if (userEmail) {
           const statusResponse = await axios.get("/likes/status", {
             params: { postId: id },
@@ -56,14 +67,19 @@ function Post({ post }) {
     };
 
     fetchPostData();
-  }, [id, userEmail]); // Dependency array includes userEmail to trigger re-fetch
+  }, [id, userEmail]);
 
   return (
     <div className="my-8">
       <div className="bg-myblue w-[90%] mx-auto p-0 rounded-tl-xl rounded-tr-xl">
         <div className="relative p-3">
           <div className="flex items-center gap-2">
-            <img src={Logo} alt="Infinite Thread Logo" width={30} height={30} />
+            <img
+              src={imageUrl}
+              alt={`${author}'s profile`}
+              className="w-[30px] h-[30px] rounded-full"
+              onError={() => setImageUrl(Logo)}
+            />
             <p className="text-white">{author}</p>
           </div>
           <div className="bg-myorange text-white absolute top-0 right-0 p-1 rounded-tr-xl rounded-bl-xl">
