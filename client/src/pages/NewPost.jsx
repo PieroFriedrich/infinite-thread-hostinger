@@ -51,6 +51,7 @@ const NewPost = () => {
           title: formData.title,
           details: formData.comment,
           tags: tagNames,
+          imageUrl: user.picture, // Add the profile picture URL
         };
 
         console.log("Form Data Submitted:", postData);

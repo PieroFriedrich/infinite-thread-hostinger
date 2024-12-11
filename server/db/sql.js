@@ -34,6 +34,7 @@ const initializeDatabase = async () => {
         title VARCHAR(255) NOT NULL,
         author VARCHAR(255) NOT NULL,
         details TEXT NOT NULL,
+        image_url VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (author) REFERENCES ${database}.users(email)
       )
