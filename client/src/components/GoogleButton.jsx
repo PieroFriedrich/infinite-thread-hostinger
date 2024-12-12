@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import Logo from "../images/infinite_thread.png";
+import Logo from "../images/infinite_thread_blue.png";
 
 function GoogleButton() {
   const [user, setUser] = useState(() => {
@@ -76,7 +76,7 @@ function GoogleButton() {
           <h2>Welcome back, {user.given_name || user.name}</h2>{" "}
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <button
-              className="rounded-md bg-myorange p-1"
+              className="rounded-md bg-mycolor2 p-1"
               onClick={handleSignOut}
               style={{ color: "white" }}
             >

@@ -86,7 +86,7 @@ const NewPost = () => {
     <>
       <NavBar />
 
-      <div className="flex flex-col lg:flex-row justify-center lg:items-start mt-10 px-4 space-y-6 lg:space-y-0 lg:space-x-6">
+      <div className="flex flex-col lg:flex-row w-[80%] mx-auto justify-center lg:items-start mt-10 px-4 space-y-6 lg:space-y-0 lg:space-x-6">
         {/* Left: AboutUs and GoogleButton */}
         <div className="w-full lg:w-[30%] flex flex-col items-center space-y-4">
           <div className="w-full mx-auto">
@@ -146,7 +146,7 @@ const NewPost = () => {
 
             <button
               type="submit"
-              className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 focus:outline-none focus:ring focus:ring-orange-500"
+              className="w-full bg-mycolor2 text-white py-2 rounded-md hover:font-bold focus:outline-none"
               disabled={!user}
             >
               {user ? "Create a New Post" : "Log in to create a post"}{" "}

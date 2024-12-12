@@ -80,36 +80,36 @@ function PostPage() {
   return (
     <>
       <NavBar />
-      <div className={"mx-auto w-[50%]"}>
+      <div className={"mx-auto w-[80%] md:w-[60%] sm:w-[50%]"}>
         <Post post={post} />
         <textarea
-          className="bg-myblue w-[90%] py-3 pl-4 mx-auto block rounded-tl-xl rounded-tr-xl text-white"
+          className="bg-myblue w-full sm:w-[90%] py-3 pl-4 mx-auto block rounded-tl-xl rounded-tr-xl text-mycolor2 border"
           placeholder="Make your comment"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
         ></textarea>
-        <div className="bg-myorange w-[90%] py-2 mx-auto p-0 rounded-bl-xl rounded-br-xl flex justify-end">
+        <div className="w-full sm:w-[90%] py-2 mx-auto p-0 rounded-bl-xl rounded-br-xl flex justify-end border">
           <button
-            className="bg-myyellow rounded-lg mr-2 p-1"
+            className="bg-mycolor2 text-white rounded-lg mr-2 p-1 hover:font-bold"
             onClick={handleCommentSubmit}
           >
             Comment
           </button>
         </div>
-        <div className="bg-myblue w-[90%] mx-auto mt-8 p-3 rounded-lg">
-          <h3 className="text-white text-lg mb-2">Comments</h3>
+        <div className="border w-full sm:w-[90%] mx-auto mt-8 p-3 rounded-lg">
+          <h3 className="text-mycolor2 text-lg mb-2">Comments</h3>
           {comments.length > 0 ? (
             comments.map((comment) => (
               <div
                 key={comment.id}
-                className="bg-myblue p-3 rounded-lg mb-2 text-white"
+                className="p-3 rounded-lg mb-2 text-mycolor2 border"
               >
                 <p>{comment.text}</p>
                 <small>By: {comment.author}</small>
               </div>
             ))
           ) : (
-            <p className="text-white">
+            <p className="text-mycolor2">
               No comments yet. Be the first to comment!
             </p>
           )}

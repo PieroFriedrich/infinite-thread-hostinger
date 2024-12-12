@@ -80,7 +80,7 @@ function Home() {
   return (
     <>
       <NavBar />
-      <div className="flex flex-col lg:flex-row w-full">
+      <div className="flex flex-col lg:flex-row w-full bg-white">
         {/* Tags Toggle Button for Mobile and Tablet */}
         <div className="lg:hidden flex justify-between items-center p-4">
           <button
@@ -94,7 +94,7 @@ function Home() {
         {/* Tags Section with Responsive Visibility */}
         <div
           className={`
-            w-[80%] lg:w-[25%]
+            lg:w-[25%]
             ${isTagsVisible ? "block" : "hidden lg:block"}
             px-4 lg:px-0
           `}
@@ -108,7 +108,7 @@ function Home() {
         </div>
 
         {/* Posts Section */}
-        <div className="w-full lg:w-[50%] max-h-[100vh] overflow-y-auto border border-gray-200 p-4 rounded">
+        <div className="w-full lg:w-[50%] max-h-[100vh] overflow-y-auto border border-gray-200 p-4 rounded bg-mycolor5">
           {posts.length === 0 ? (
             <p>No posts found.</p>
           ) : (

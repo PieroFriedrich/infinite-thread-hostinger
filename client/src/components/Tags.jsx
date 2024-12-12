@@ -73,7 +73,7 @@ const Tags = ({ noSearch, onTagsChange, wid, onSearchClick }) => {
             key={tag.id}
             className={`px-4 py-2 rounded-lg text-sm cursor-pointer transition-colors ${
               activeTags.includes(tag.id)
-                ? "bg-orange-500 text-white font-bold"
+                ? "bg-mycolor3 text-white font-bold"
                 : "bg-gray-200 text-gray-800 hover:bg-gray-300"
             }`}
             onClick={() => toggleTag(tag.id)}
@@ -85,7 +85,7 @@ const Tags = ({ noSearch, onTagsChange, wid, onSearchClick }) => {
       {warning && <p className="text-red-500 text-sm mt-2">{warning}</p>}
       {!noSearch && (
         <button className="w-full mt-1" onClick={handleSearch}>
-          <div className="flex gap-1 bg-myorange p-1 rounded-md text-myblue justify-center">
+          <div className="flex gap-1 bg-mycolor2 p-1 rounded-md text-white justify-center">
             <img src={SearchIcon} alt="search icon" width={20} height={20} />
             Search
           </div>
