@@ -94,7 +94,7 @@ function Home() {
         {/* Tags Section with Responsive Visibility */}
         <div
           className={`
-            w-full lg:w-[25%] 
+            w-[80%] lg:w-[25%]
             ${isTagsVisible ? "block" : "hidden lg:block"}
             px-4 lg:px-0
           `}

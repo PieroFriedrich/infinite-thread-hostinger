@@ -67,7 +67,7 @@ const Tags = ({ noSearch, onTagsChange, wid, onSearchClick }) => {
         <h2>What is your post about?</h2>
       )}
 
-      <div className="flex flex-wrap gap-2 mt-4">
+      <div className="flex flex-wrap justify-center gap-2 mt-4">
         {tags.map((tag) => (
           <span
             key={tag.id}
