@@ -85,38 +85,41 @@ function Post({ post }) {
         .replace(" minute ago", "m ago")
         .replace(" minutes ago", "m ago")
         .replace(" day ago", "d ago")
-        .replace(" days ago", "d ago");
+        .replace(" days ago", "d ago")
+        .replace("less than am ago", "less than 1m ago");
 
       setTimeAgo(formattedTimeAgo);
     }
   }, [created_at]);
 
   return (
-    <div className="my-8">
-      <div className="bg-myblue w-[90%] mx-auto p-0 rounded-tl-xl rounded-tr-xl">
+    <div className="my-4 sm:my-8">
+      <div className="bg-myblue w-full sm:w-[90%] mx-auto p-0 rounded-tl-xl rounded-tr-xl">
         <div className="relative p-3">
           <div className="flex items-center gap-2">
             <img
-              src={imageUrl}
+              src={imageUrl || Logo}
               alt={`${author}'s profile`}
               className="w-[30px] h-[30px] rounded-full"
               onError={() => setImageUrl(Logo)}
             />
-            <p className="text-white">{author}</p>
+            <p className="text-white text-sm sm:text-base">{author}</p>
           </div>
-          <div className="bg-myorange text-white absolute top-0 right-0 p-1 rounded-tr-xl rounded-bl-xl">
+          <div className="bg-myorange text-white absolute top-0 right-0 p-1 rounded-tr-xl rounded-bl-xl text-xs sm:text-sm">
             {timeAgo}
           </div>
-          <h2 className="text-white text-3xl py-3 border-b border-b-myorange">
+          <h2 className="text-white text-xl sm:text-3xl py-2 sm:py-3 border-b border-b-myorange">
             <Link to={`/post/${id}`} className="text-white hover:text-myorange">
               {title}
             </Link>
           </h2>
-          <p className="text-white pt-3 text-sm">{details}</p>
+          <p className="text-white pt-2 sm:pt-3 text-xs sm:text-sm line-clamp-3">
+            {details}
+          </p>
         </div>
       </div>
-      <div className="bg-myorange w-[90%] mx-auto p-0 rounded-bl-xl rounded-br-xl flex gap-1 py-2 justify-between items-center">
-        <div className="flex ml-1 gap-2">
+      <div className="bg-myorange w-full sm:w-[90%] mx-auto p-0 rounded-bl-xl rounded-br-xl flex gap-1 py-2 justify-between items-center">
+        <div className="flex ml-1 gap-2 items-center">
           <LikeButton
             postId={id}
             isLiked={isLiked}
@@ -126,21 +129,27 @@ function Post({ post }) {
               setIsLiked(newIsLiked);
             }}
           />
-          <span className="text-white">{likeCount}</span>
+          <span className="text-white text-xs sm:text-sm">{likeCount}</span>
           <div className="flex items-center gap-1">
             <Link to={`/post/${id}`}>
-              <img src={CommentIcon} alt="Comments Icon" width={20} />
+              <img
+                src={CommentIcon}
+                alt="Comments Icon"
+                className="w-4 sm:w-5"
+              />
             </Link>
-            <span className="text-white">{commentCount}</span>
+            <span className="text-white text-xs sm:text-sm">
+              {commentCount}
+            </span>
           </div>
         </div>
 
-        <div className="flex mr-1 gap-1">
+        <div className="flex flex-wrap mr-1 gap-1 items-center justify-end">
           {tags &&
             tags.split(",").map((tag) => (
               <p
                 key={tag}
-                className="bg-myyellow rounded-lg ml-2 px-2 text-myblue"
+                className="bg-myyellow rounded-lg ml-1 px-1 sm:px-2 text-myblue text-xs sm:text-sm"
               >
                 {tag}
               </p>

@@ -69,7 +69,7 @@ function GoogleButton() {
 
   return (
     <div>
-      <div id="signInDiv"></div>
+      <div id="signInDiv" className="mx-auto w-max"></div>
 
       {Object.keys(user).length !== 0 && (
         <div className="flex flex-col items-center gap-1">

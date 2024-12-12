@@ -31,6 +31,13 @@ function Login() {
           First time in here? Log into your Google Account and get access to
           participate in our Tech Community
         </p>
+        <h2 className="text-md font-bold mt-6">
+          Login to Infinite Thread with Google:
+        </h2>
+        <div className="mt-2 mb-6">
+          <GoogleButton />
+        </div>
+
         <p className="mb-4">
           Infinite Thread is your go-to platform for exploring, sharing, and
           connecting within the ever-evolving world of IT. Whether you're a
@@ -56,12 +63,6 @@ function Login() {
           learning thrive. Together, we can weave an infinite thread of ideas
           that shape the future of technology.
         </p>
-        <div className="flex items-center gap-4 justify-center">
-          <h2 className="text-md font-bold">
-            Login to Infinite Thread with Google:
-          </h2>
-          <GoogleButton />
-        </div>
       </div>
     </>
   );

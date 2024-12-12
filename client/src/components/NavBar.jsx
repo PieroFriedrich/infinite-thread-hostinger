@@ -25,7 +25,7 @@ function NavBar() {
         <span>Infinite Thread</span>
       </button>
 
-      <div className="flex items-center justify-between gap-2 bg-white p-1 rounded-md">
+      {/* <div className="flex items-center justify-between gap-2 bg-white p-1 rounded-md">
         <input
           className="outline-none w-[400px]"
           type="text"
@@ -34,7 +34,7 @@ function NavBar() {
         <button>
           <img src={SearchIcon} alt="Search Icon" width={20} height={20} />
         </button>
-      </div>
+      </div> */}
       <button onClick={redirectToNewPost}>
         <div className="flex gap-1 bg-myorange p-1 rounded-md text-myblue">
           <img src={PlusIcon} alt="plus icon" width={20} height={20} />
