@@ -23,6 +23,17 @@ function AboutUs() {
         thrive. Together, we can weave an infinite thread of ideas that shape
         the future of technology.
       </p>
+      <p className="mt-4">
+        Copyright &copy;{" "}
+        <a
+          href="https://www.linkedin.com/in/piero-friedrich-90a9b9192/"
+          target="_blank"
+          className="underline text-mycolor4 hover:text-mycolor2"
+        >
+          Piero Friedrich.
+        </a>{" "}
+        All rights reserved
+      </p>
     </>
   );
 }

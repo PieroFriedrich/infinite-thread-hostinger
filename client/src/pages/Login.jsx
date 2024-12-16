@@ -25,7 +25,7 @@ function Login() {
   return (
     <>
       <NavBar />
-      <div className="mt-8 mx-auto w-[50%] text-center">
+      <div className="mt-8 mx-auto w-[80%] lg:w-[50%] text-center">
         <h2 className="mb-4 font-bold text-2xl">Welcome to Infinite Thread!</h2>
         <p className="mb-4">
           First time in here? Log into your Google Account and get access to

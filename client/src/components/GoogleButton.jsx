@@ -76,7 +76,7 @@ function GoogleButton() {
           <h2>Welcome back, {user.given_name || user.name}</h2>{" "}
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <button
-              className="rounded-md bg-mycolor2 p-1"
+              className="rounded-md bg-mycolor2 p-1 hover:font-bold"
               onClick={handleSignOut}
               style={{ color: "white" }}
             >

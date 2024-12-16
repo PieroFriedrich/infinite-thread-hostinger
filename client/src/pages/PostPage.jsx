@@ -70,6 +70,7 @@ function PostPage() {
       );
       setComments((prev) => [...prev, response.data]); // Update comments
       setNewComment(""); // Clear the textarea
+      window.location.reload();
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -78,17 +79,18 @@ function PostPage() {
   if (!post) return <div>Loading post...</div>;
 
   return (
-    <>
+    <div className="bg-mycolor5 min-h-screen">
       <NavBar />
-      <div className={"mx-auto w-[80%] md:w-[60%] sm:w-[50%]"}>
-        <Post post={post} />
+      <div className="mx-auto w-[80%] md:w-[60%] sm:w-[50%]">
+        <Post post={post} lineblock={false} />
         <textarea
           className="bg-myblue w-full sm:w-[90%] py-3 pl-4 mx-auto block rounded-tl-xl rounded-tr-xl text-mycolor2 border"
           placeholder="Make your comment"
+          maxLength={1000}
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
         ></textarea>
-        <div className="w-full sm:w-[90%] py-2 mx-auto p-0 rounded-bl-xl rounded-br-xl flex justify-end border">
+        <div className="w-full sm:w-[90%] py-2 mx-auto p-0 rounded-bl-xl rounded-br-xl flex justify-end border bg-white">
           <button
             className="bg-mycolor2 text-white rounded-lg mr-2 p-1 hover:font-bold"
             onClick={handleCommentSubmit}
@@ -96,26 +98,26 @@ function PostPage() {
             Comment
           </button>
         </div>
-        <div className="border w-full sm:w-[90%] mx-auto mt-8 p-3 rounded-lg">
+        <div className="border w-full sm:w-[90%] mx-auto mt-8 p-3 rounded-lg bg-white">
           <h3 className="text-mycolor2 text-lg mb-2">Comments</h3>
           {comments.length > 0 ? (
             comments.map((comment) => (
               <div
                 key={comment.id}
-                className="p-3 rounded-lg mb-2 text-mycolor2 border"
+                className="p-3 rounded-lg mb-2 text-mycolor2 border bg-white"
               >
                 <p>{comment.text}</p>
                 <small>By: {comment.author}</small>
               </div>
             ))
           ) : (
-            <p className="text-mycolor2">
+            <p className="text-mycolor2 bg-white">
               No comments yet. Be the first to comment!
             </p>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -112,7 +112,9 @@ function Home() {
           {posts.length === 0 ? (
             <p>No posts found.</p>
           ) : (
-            posts.map((post) => <Post key={post.id} post={post} />)
+            posts.map((post) => (
+              <Post key={post.id} post={post} lineblock={true} />
+            ))
           )}
         </div>
 
@@ -128,7 +130,7 @@ function Home() {
           <div className="my-4 flex justify-center">
             <GoogleButton />
           </div>
-          <div className="w-full lg:w-[80%] mx-auto text-center flex flex-col items-center">
+          <div className="sm:w-[80%] md:w-[65%] lg:w-[80%] mx-auto text-center flex flex-col items-center">
             <AboutUs />
           </div>
         </div>

@@ -116,8 +116,9 @@ const NewPost = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-orange-500"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-mycolor4"
                 placeholder="Enter post title"
+                maxLength={100}
                 required
               />
             </div>
@@ -134,8 +135,9 @@ const NewPost = () => {
                 name="comment"
                 value={formData.comment}
                 onChange={handleChange}
+                maxLength={1000}
                 rows="5"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-orange-500"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-mycolor4"
                 placeholder="Write your comment"
                 required
               ></textarea>

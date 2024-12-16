@@ -6,7 +6,7 @@ import CommentIcon from "../images/comment_icon.svg";
 import LikeButton from "./LikeButton";
 import { Link } from "react-router-dom";
 
-function Post({ post }) {
+function Post({ post, lineblock }) {
   const { id, title, author, image_url, details, tags, created_at } = post;
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -95,28 +95,34 @@ function Post({ post }) {
   return (
     <div className="my-4 sm:my-8">
       <div className="w-full sm:w-[90%] mx-auto p-0 rounded-tl-xl rounded-tr-xl border bg-white">
-        <div className="relative p-3">
-          <div className="flex items-center gap-2">
-            <img
-              src={imageUrl || Logo}
-              alt={`${author}'s profile`}
-              className="w-[30px] h-[30px] rounded-full"
-              onError={() => setImageUrl(Logo)}
-            />
-            <p className="text-mycolor2 text-sm sm:text-base">{author}</p>
-          </div>
-          <div className="bg-mycolor4 text-mycolor2 absolute top-0 right-0 p-1 rounded-tr-xl rounded-bl-xl text-xs sm:text-sm">
-            {timeAgo}
-          </div>
-          <h2 className="text-mycolor2 text-md sm:text-xl py-2 sm:py-3 border-b border-b-mycolor5 font-bold">
-            <Link to={`/post/${id}`} className="text-mycolor2 hover:underline">
+        <Link to={`/post/${id}`} className="text-mycolor2">
+          <div className="relative p-3">
+            <div className="flex items-center gap-2">
+              <img
+                src={imageUrl || Logo}
+                alt={`${author}'s profile`}
+                className="w-[30px] h-[30px] rounded-full"
+                onError={() => setImageUrl(Logo)}
+              />
+              <p className="text-mycolor2 text-sm sm:text-base">{author}</p>
+            </div>
+            <div className="bg-mycolor2 text-white absolute top-0 right-0 p-1 rounded-tr-xl rounded-bl-xl text-xs sm:text-sm">
+              {timeAgo}
+            </div>
+            <h2 className="text-mycolor2 text-md sm:text-xl py-2 sm:py-3 border-b border-b-mycolor5 font-bold">
               {title}
-            </Link>
-          </h2>
-          <p className="text-mycolor2 pt-2 sm:pt-3 text-xs sm:text-sm line-clamp-3">
-            {details}
-          </p>
-        </div>
+            </h2>
+            {lineblock ? (
+              <p className="text-mycolor2 pt-2 sm:pt-3 text-xs sm:text-sm line-clamp-5">
+                {details}
+              </p>
+            ) : (
+              <p className="text-mycolor2 pt-2 sm:pt-3 text-xs sm:text-sm">
+                {details}
+              </p>
+            )}
+          </div>
+        </Link>
       </div>
       <div className="bg-white w-full sm:w-[90%] mx-auto p-0 rounded-bl-xl rounded-br-xl flex items-center justify-between py-2 border">
         {/* Interaction Section (Likes and Comments) */}
