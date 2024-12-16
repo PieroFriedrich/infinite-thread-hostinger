@@ -11,7 +11,7 @@ const Tags = ({ noSearch, onTagsChange, wid, onSearchClick }) => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/tags");
+        const response = await axios.get(`${import.meta.env.VITE_HOST}/tags`);
         setTags(response.data);
         setLoading(false);
       } catch (err) {
