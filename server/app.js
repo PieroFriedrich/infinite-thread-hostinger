@@ -27,10 +27,28 @@ app.use("/posts", postRoutes);
 app.use("/tags", tagRoutes);
 app.use("/likes", likeRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  initializeDatabase();
+app.get("/", (req, res) => {
+  res.send("Welcome to Infinite Thread!");
 });
+
+const PORT = process.env.PORT || 3000;
+const startServer = async () => {
+  try {
+    // Initialize the database
+    await initializeDatabase();
+
+    // Start the server
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error(
+      "Error initializing the database or starting the server",
+      error
+    );
+  }
+};
+
+startServer();
 
 module.exports = app;
