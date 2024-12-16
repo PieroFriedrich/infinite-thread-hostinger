@@ -43,12 +43,13 @@ function LikeButton({ postId, isLiked, likeCount, onLikeChange }) {
   };
 
   return (
-    <button className="pl-2 flex items-center" onClick={handleLike}>
+    <button className="flex items-center" onClick={handleLike}>
       <img
         src={isLiked ? FilledHeartIcon : HeartIcon}
         alt="Like Button"
         width={20}
         height={20}
+        className="transform hover:scale-110 transition-transform duration-200"
       />
     </button>
   );

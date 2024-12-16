@@ -51,7 +51,7 @@ const NewPost = () => {
           title: formData.title,
           details: formData.comment,
           tags: tagNames,
-          imageUrl: user.picture, // Add the profile picture URL
+          imageUrl: user.picture,
         };
 
         console.log("Form Data Submitted:", postData);
@@ -86,12 +86,19 @@ const NewPost = () => {
     <>
       <NavBar />
 
-      <div className="flex justify-between items-start mt-10 px-4">
-        {/* Left: Empty space */}
-        <div className="w-[30%]"></div>
+      <div className="flex flex-col lg:flex-row w-[80%] mx-auto justify-center lg:items-start mt-10 px-4 space-y-6 lg:space-y-0 lg:space-x-6">
+        {/* Left: AboutUs and GoogleButton */}
+        <div className="w-full lg:w-[30%] flex flex-col items-center space-y-4">
+          <div className="w-full mx-auto">
+            <GoogleButton setUser={setUser} />
+          </div>
+          <div className="w-full text-center">
+            <AboutUs />
+          </div>
+        </div>
 
         {/* Middle: New Post form */}
-        <div className="w-[40%] bg-gray-100 p-6 rounded-lg shadow-md mx-auto">
+        <div className="w-full lg:w-[40%] bg-gray-100 p-6 rounded-lg shadow-md">
           <h1 className="text-2xl font-bold text-center mb-4 text-gray-800">
             Create a New Post
           </h1>
@@ -109,8 +116,9 @@ const NewPost = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-orange-500"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-mycolor4"
                 placeholder="Enter post title"
+                maxLength={100}
                 required
               />
             </div>
@@ -127,8 +135,9 @@ const NewPost = () => {
                 name="comment"
                 value={formData.comment}
                 onChange={handleChange}
+                maxLength={1000}
                 rows="5"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-orange-500"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-mycolor4"
                 placeholder="Write your comment"
                 required
               ></textarea>
@@ -139,22 +148,12 @@ const NewPost = () => {
 
             <button
               type="submit"
-              className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 focus:outline-none focus:ring focus:ring-orange-500"
+              className="w-full bg-mycolor2 text-white py-2 rounded-md hover:font-bold focus:outline-none"
               disabled={!user}
             >
               {user ? "Create a New Post" : "Log in to create a post"}{" "}
             </button>
           </form>
-        </div>
-
-        {/* Right: AboutUs and GoogleButton */}
-        <div className="w-[30%] flex flex-col items-center">
-          <div className="my-4">
-            <GoogleButton setUser={setUser} />
-          </div>
-          <div className="w-[80%] mx-auto text-center flex flex-col items-center">
-            <AboutUs />
-          </div>
         </div>
       </div>
     </>
