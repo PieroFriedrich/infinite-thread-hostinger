@@ -13,7 +13,7 @@ function GoogleButton() {
     try {
       console.log(userObject);
       await axios.post(
-        "http://localhost:3000/users",
+        `${import.meta.env.VITE_HOST}/users`,
         {
           email: userObject.email,
           fullName: userObject.name,

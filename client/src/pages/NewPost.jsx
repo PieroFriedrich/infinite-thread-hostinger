@@ -40,7 +40,7 @@ const NewPost = () => {
       return;
     }
 
-    fetch("http://localhost:3000/tags")
+    fetch(`${import.meta.env.VITE_HOST}/tags`)
       .then((response) => response.json())
       .then((allTags) => {
         const tagNames = selectedTagIds
@@ -56,7 +56,7 @@ const NewPost = () => {
 
         console.log("Form Data Submitted:", postData);
 
-        return fetch("http://localhost:3000/posts", {
+        return fetch(`${import.meta.env.VITE_HOST}/posts`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

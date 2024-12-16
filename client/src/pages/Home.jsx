@@ -15,7 +15,7 @@ function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/posts");
+        const response = await fetch(`${import.meta.env.VITE_HOST}/posts`);
         const data = await response.json();
         setPosts(data);
       } catch (error) {
@@ -25,7 +25,7 @@ function Home() {
 
     const fetchTags = async () => {
       try {
-        const response = await fetch("http://localhost:3000/tags");
+        const response = await fetch(`${import.meta.env.VITE_HOST}/tags`);
         const data = await response.json();
         setTags(data);
       } catch (error) {
@@ -45,7 +45,7 @@ function Home() {
     try {
       // If no tags are selected, show all posts
       if (selectedTagIds.length === 0) {
-        const response = await fetch("http://localhost:3000/posts");
+        const response = await fetch(`${import.meta.env.VITE_HOST}/posts`);
         const data = await response.json();
         setPosts(data);
         setIsSearched(false);
@@ -54,7 +54,7 @@ function Home() {
 
       const tagPromises = selectedTagIds.map(async (tagId) => {
         const response = await fetch(
-          `http://localhost:3000/posts/tag/${tagId}`
+          `${import.meta.env.VITE_HOST}/posts/tag/${tagId}`
         );
         return response.json();
       });

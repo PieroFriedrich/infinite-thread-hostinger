@@ -15,7 +15,9 @@ function PostPage() {
     // Fetch post details
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/posts/${id}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_HOST}/posts/${id}`
+        );
         setPost(response.data);
       } catch (error) {
         console.error("Error fetching post:", error);
@@ -57,7 +59,7 @@ function PostPage() {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/posts/${id}/comments`,
+        `${import.meta.env.VITE_HOST}/posts/${id}/comments`,
         {
           author: JSON.parse(localStorage.getItem("user")).email, // Replace with actual key if different
           text: newComment,
