@@ -37,7 +37,9 @@ router.post("/", async (req, res) => {
     return res.status(401).json({ error: "Authentication required" });
   }
 
+  console.log("Attempting to acquire database connection...");
   const connection = await pool.getConnection();
+  console.log("Database connection acquired");
 
   try {
     await connection.beginTransaction();
