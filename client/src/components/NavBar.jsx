@@ -12,7 +12,7 @@ function NavBar() {
   };
 
   return (
-    <nav className="flex items-center justify-between bg-mycolor2 p-4">
+    <nav className="flex flex-col xs:flex-row items-center justify-between bg-mycolor2 p-4">
       <button
         className="flex items-center gap-4 px-4 py-2 bg-transparent text-white text-lg font-semibold hover:font-bold hover:text-mycolor4"
         onClick={redirectToHome}

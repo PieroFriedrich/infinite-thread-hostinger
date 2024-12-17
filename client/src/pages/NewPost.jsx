@@ -91,11 +91,13 @@ const NewPost = () => {
 
       <div className="flex flex-col lg:flex-row w-[80%] mx-auto justify-center lg:items-start mt-10 px-4 space-y-6 lg:space-y-0 lg:space-x-6">
         {/* Left: AboutUs and GoogleButton */}
-        <div className="w-full lg:w-[30%] flex flex-col items-center space-y-4">
+        <div className="w-full lg:w-[30%] flex flex-col items-center space-y-4 hidden lg:block">
           <div className="w-full mx-auto">
             <GoogleButton setUser={setUser} />
           </div>
-          <div className="w-full text-center">
+
+          {/* Show AboutUs only on larger screens */}
+          <div className="w-full text-center hidden lg:block">
             <AboutUs />
           </div>
         </div>
