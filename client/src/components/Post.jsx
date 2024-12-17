@@ -47,17 +47,24 @@ function Post({ post, lineblock }) {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const countResponse = await axios.get(`/likes/count/${id}`);
+        const countResponse = await axios.get(
+          `${import.meta.env.VITE_HOST}/likes/count/${id}`
+        );
         setLikeCount(countResponse.data.likeCount);
 
-        const commentResponse = await axios.get(`/posts/${id}/comments/count`);
+        const commentResponse = await axios.get(
+          `${import.meta.env.VITE_HOST}/posts/${id}/comments/count`
+        );
         setCommentCount(commentResponse.data.commentCount);
 
         if (userEmail) {
-          const statusResponse = await axios.get("/likes/status", {
-            params: { postId: id },
-            headers: { "x-username": userEmail },
-          });
+          const statusResponse = await axios.get(
+            `${import.meta.env.VITE_HOST}/likes/status`,
+            {
+              params: { postId: id },
+              headers: { "x-username": userEmail },
+            }
+          );
           setIsLiked(statusResponse.data.isLiked);
         }
       } catch (error) {

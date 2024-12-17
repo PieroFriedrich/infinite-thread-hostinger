@@ -28,7 +28,7 @@ function PostPage() {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/posts/${id}/comments`
+          `${import.meta.env.VITE_HOST}/posts/${id}/comments`
         );
         setComments(response.data);
       } catch (error) {
@@ -103,9 +103,9 @@ function PostPage() {
         <div className="border w-full sm:w-[90%] mx-auto mt-8 p-3 rounded-lg bg-white">
           <h3 className="text-mycolor2 text-lg mb-2">Comments</h3>
           {comments.length > 0 ? (
-            comments.map((comment) => (
+            comments.map((comment, index) => (
               <div
-                key={comment.id}
+                key={index}
                 className="p-3 rounded-lg mb-2 text-mycolor2 border bg-white"
               >
                 <p>{comment.text}</p>

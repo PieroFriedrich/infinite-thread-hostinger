@@ -24,6 +24,8 @@ const NewPost = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+    } else {
+      navigate("/login");
     }
   }, []);
 
@@ -79,6 +81,7 @@ const NewPost = () => {
       })
       .catch((error) => {
         console.error("Error creating post:", error);
+        alert(`Error: ${error.message}`);
       });
   };
 

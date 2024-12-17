@@ -37,7 +37,7 @@ function GoogleButton() {
     localStorage.setItem("user", JSON.stringify(userObject));
     createUserIfNotExists(userObject);
 
-    window.location.reload();
+    // window.location.reload();
   }
 
   function handleSignOut() {

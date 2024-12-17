@@ -16,10 +16,13 @@ function LikeButton({ postId, isLiked, likeCount, onLikeChange }) {
       if (isLiked) {
         // Unlike the post
         console.log("Sending request to unlike post ID:", postId);
-        const response = await axios.delete("/likes", {
-          data: { postId },
-          headers: { "x-username": userEmail },
-        });
+        const response = await axios.delete(
+          `${import.meta.env.VITE_HOST}/likes`,
+          {
+            data: { postId },
+            headers: { "x-username": userEmail },
+          }
+        );
 
         console.log("Unlike response:", response);
         onLikeChange(response.data.likeCount || likeCount - 1, false);
@@ -27,7 +30,7 @@ function LikeButton({ postId, isLiked, likeCount, onLikeChange }) {
         // Like the post
         console.log("Sending request to like post ID:", postId);
         const response = await axios.post(
-          "/likes",
+          `${import.meta.env.VITE_HOST}/likes`,
           { postId },
           { headers: { "x-username": userEmail } }
         );

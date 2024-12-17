@@ -9,7 +9,9 @@ function Comment({ postId, userEmail }) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`/posts/${postId}/comments`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_HOST}/posts/${postId}/comments`
+        );
         setComments(response.data);
       } catch (error) {
         console.error("Error fetching comments:", error);
@@ -25,7 +27,7 @@ function Comment({ postId, userEmail }) {
 
     try {
       const response = await axios.post(
-        `/posts/${postId}/comments`,
+        `${import.meta.env.VITE_HOST}/posts/${postId}/comments`,
         { text: newComment },
         { headers: { "x-username": userEmail } }
       );
